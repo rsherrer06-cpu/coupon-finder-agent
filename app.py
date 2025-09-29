@@ -50,11 +50,14 @@ if st.button("Find Coupons") and store:
     )
 
     # Call OpenAI to summarize and rank
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        summary = response['choices'][0]['message']['content']
+        st.write("✅ AI Summary of Coupons:")
+        st.write(summary)
+    except Exception as e:
+        st.error(f"❌ Error calling OpenAI: {e}")
 
-    summary = response['choices'][0]['message']['content']
-    st.write("✅ AI Summary of Coupons:")
-    st.write(summary)
