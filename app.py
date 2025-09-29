@@ -5,7 +5,6 @@ openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 st.title("🤑 Coupon Finder AI Agent")
 
-# Use a form to capture input and button click together
 with st.form("coupon_form"):
     store_input = st.text_input("Enter store name (e.g., nike)").strip().lower()
     submitted = st.form_submit_button("Find Coupons")
