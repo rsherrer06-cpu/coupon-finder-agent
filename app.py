@@ -1,10 +1,12 @@
 import streamlit as st
 import openai
 
+# Load your OpenAI API key securely from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 st.title("🤑 Coupon Finder AI Agent")
 
+# Get and clean store name input
 store = st.text_input("Enter store name (e.g., nike)").strip().lower()
 
 if st.button("Find Coupons") and store:
@@ -29,14 +31,25 @@ if st.button("Find Coupons") and store:
         ]
     }
 
+    # Use store-specific coupons or fallback to generic ones
     coupons = store_coupons.get(store, [
         "10% Off First Order — Code: WELCOME10",
         "Free Shipping — Code: FREESHIP",
         "Seasonal Sale — Code: FALL25"
     ])
 
-    prompt = f"Summarize and rank these coupon codes for {store}.com:\n" + "\n".join(coupons)
+    # Show the coupons being analyzed
+    st.write("🧾 Coupons being analyzed:")
+    st.write(coupons)
 
+    # Create AI prompt
+    prompt = (
+        f"You are an expert coupon analyst for {store}.com.\n"
+        f"Here are the current coupons:\n" + "\n".join(coupons) +
+        "\n\nPlease rank them by value and explain which one is best for customers shopping at this store."
+    )
+
+    # Call OpenAI to summarize and rank
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
@@ -45,4 +58,3 @@ if st.button("Find Coupons") and store:
     summary = response['choices'][0]['message']['content']
     st.write("✅ AI Summary of Coupons:")
     st.write(summary)
-
