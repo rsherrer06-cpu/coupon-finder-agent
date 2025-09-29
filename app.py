@@ -7,12 +7,14 @@ openai.api_key = st.secrets["OPENAI_API_KEY"]
 st.title("🤑 Coupon Finder AI Agent")
 
 # Get and clean store name input
-store = st.text_input("Enter store name (e.g., nike)").strip().lower()
+store_input = st.text_input("Enter store name (e.g., nike)")
+store = store_input.strip().lower()
 
+# Only run logic when button is clicked and store name is entered
 if st.button("Find Coupons") and store:
     st.write(f"🔍 Searching for coupons for {store}.com...")
 
-    # Simulated coupon list based on store
+    # Define store-specific coupons
     store_coupons = {
         "nike": [
             "20% Off Sitewide — Code: NIKE20",
@@ -31,16 +33,17 @@ if st.button("Find Coupons") and store:
         ]
     }
 
-    # Use store-specific coupons or fallback to generic ones
+    # Get coupons for the store or fallback to generic
     coupons = store_coupons.get(store, [
         "10% Off First Order — Code: WELCOME10",
         "Free Shipping — Code: FREESHIP",
         "Seasonal Sale — Code: FALL25"
     ])
 
-    # Show the coupons being analyzed
+    # Show which coupons are being analyzed
     st.write("🧾 Coupons being analyzed:")
-    st.write(coupons)
+    for coupon in coupons:
+        st.write(f"- {coupon}")
 
     # Create AI prompt
     prompt = (
